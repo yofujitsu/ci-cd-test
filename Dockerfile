@@ -2,7 +2,7 @@ FROM openjdk:17-jdk-alpine as builder
 
 RUN apk add --no-cache git
 
-RUN git clone https://github.com/yofujitsu/ci-cd-test.git /app
+RUN git clone git@github.com:yofujitsu/ci-cd-test.git /app
 
 WORKDIR /app
 
