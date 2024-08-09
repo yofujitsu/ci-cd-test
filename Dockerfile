@@ -6,6 +6,8 @@ RUN git clone https://github.com/yofujitsu/ci-cd-test.git /app
 
 WORKDIR /app
 
+RUN chmod +x gradlew
+
 RUN ./gradlew build --no-daemon
 
 FROM openjdk:17-jdk-alpine
