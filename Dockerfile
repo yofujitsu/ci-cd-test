@@ -1,20 +1,21 @@
-FROM gradle:7.6.2-jdk17 AS builder
-
-WORKDIR /app
-
-COPY . .
-
-RUN chmod +x gradlew
-
-RUN gradle build -x test
-
 FROM openjdk:17-jdk-alpine
 
 WORKDIR /app
 
-COPY --from=builder /app/build/libs/cicd-test-0.0.1-SNAPSHOT.jar app.jar
+LABEL maintainer="Alexander Tsvetkov"
+
+COPY build/libs/*.jar app.jar
 
 EXPOSE 8085
 
-ENTRYPOINT ["java", "-jar", "app.jar"]
+CMD ["java", "-jar", "app.jar"]
 
+ADD https://www.mirea.ru/upload/medialibrary/80f/MIREA_Gerb_Colour.png /app/MIREA_Gerb_Colour.png
+
+ENTRYPOINT ["./start-docker-compose.sh"]
+
+VOLUME /tmp
+
+USER root
+
+ONBUILD RUN echo "Сборка и запуск произведены. Автор: Tsvetkov Alex"
