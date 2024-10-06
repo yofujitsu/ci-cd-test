@@ -1,7 +1,7 @@
 package com.yofujitsu.cicd.controller;
 
 import com.yofujitsu.cicd.entity.User;
-import com.yofujitsu.cicd.service.UserService;
+import com.yofujitsu.cicd.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.HttpHeaders;

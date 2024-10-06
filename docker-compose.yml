@@ -1,28 +1,70 @@
-version: '3.8'
 services:
-  app:
-    build: .
+  postgres:
+    container_name: postgres_tvksp
+    image: postgres:latest
+    restart: always
     ports:
-      - "8085:8085"
+      - "5432:5432"
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:3307/bd
-      - SPRING_DATASOURCE_USERNAME=root
-      - SPRING_DATASOURCE_PASSWORD=secret
-    depends_on:
-      - db
-
-  db:
-    image: mysql:8.0
-    command: --default-authentication-plugin=caching_sha2_password --port=3307
-    ports:
-      - "3307:3307"
-    environment:
-      - POSTGRES_DATABASE=db
-      - POSTGRES_USER=user
-      - POSTGRES_PASSWORD=password
-      - POSTGRES_ROOT_PASSWORD=secret
+      POSTGRES_PASSWORD: password
+      POSTGRES_USER: user
+      POSTGRES_DB: tvksp
+      PGDATA: /data/postgres
     volumes:
-      - db-data:/var/lib/postgresql
+      - postgres:/data/postgres
+    networks:
+      - postgres
+
+  grafana:
+    image: grafana/grafana
+    ports:
+      - 3000:3000
+    networks:
+      - postgres
+
+  prometheus:
+    image: prom/prometheus
+    ports:
+      - 9090:9090
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+
+  node-exporter:
+    image: prom/node-exporter:v1.3.1
+    restart: always
+    ports:
+      - "9100:9100"
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    command: --path.procfs=/host/proc --path.sysfs=/host/sys --collector.filesystem.ignored-mount-points="^/(sys|proc|dev|host|etc)($$|/)"
+
+  postgres-exporter:
+    image: prometheuscommunity/postgres-exporter
+    ports:
+      - 9187:9187
+    environment:
+      DATA_SOURCE_NAME: "postgresql://user:password@postgres:5432/shop?sslmode=disable"
+    links:
+      - postgres
+      - prometheus
+
+  app:
+    image: tvksp_pr4
+    ports:
+      - 8085:8085
+    links:
+      - postgres
+      - prometheus
+      - grafana
+      - node-exporter
+      - postgres-exporter
+
+networks:
+  postgres:
+    driver: bridge
 
 volumes:
-  db-data:
+  postgres:
+  prometheus:

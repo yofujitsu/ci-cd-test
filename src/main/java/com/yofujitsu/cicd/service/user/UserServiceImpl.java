@@ -1,4 +1,4 @@
-package com.yofujitsu.cicd.service;
+package com.yofujitsu.cicd.service.user;
 
 import com.yofujitsu.cicd.entity.User;
 import com.yofujitsu.cicd.repos.UserRepository;
