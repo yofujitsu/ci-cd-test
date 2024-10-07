@@ -51,7 +51,7 @@ services:
       - prometheus
 
   app:
-    image: tvksp_pr4
+    image: tvksp4
     ports:
       - 8085:8085
     links:
