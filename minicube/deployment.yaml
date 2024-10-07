@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tsvetkov-ikbo-16-21
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tsvetkov-ikbo-16-21
+  template:
+    metadata:
+      labels:
+        app: tsvetkov-ikbo-16-21
+    spec:
+      containers:
+        - name: tsvetkov-ikbo-16-21-container
+          image: yofujitsu/tsvetkov-ikbo-16-21-obraz
+          ports:
+            - containerPort: 8080
